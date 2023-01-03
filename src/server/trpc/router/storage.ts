@@ -2,7 +2,7 @@ import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { z } from "zod";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 
 export const storageRouter = router({
@@ -25,10 +25,26 @@ export const storageRouter = router({
         return "";
       }
     }),
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.example.findMany();
+  getAllImages: protectedProcedure.query(async({ ctx }) => {
+    const userId = ctx.session.user.id;
+    const res = await ctx.prisma.image.findMany({ where: { userId } });
+
+
+    let signedUrls = []
+    for (const image of res) {
+      const command = new GetObjectCommand({
+        Bucket: "react-knowledge-base",
+        Key: `${image.userId}/${image.id}`,
+      });
+      const signedUrl = await getSignedUrl(ctx.s3Client, command, {
+        expiresIn: 3600,
+      });
+     signedUrls.push(signedUrl);
+    }
+
+    return signedUrls;
   }),
-  createPutPresignedUrl: publicProcedure
+  createPutPresignedUrl: protectedProcedure
     .input(
       z.object({
         Bucket: z.string(),
@@ -38,8 +54,8 @@ export const storageRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         // this will be private procedure so session and user will always be set here!
-        // const userId = ctx.session!.user!.id;
-        const userId = "davirolim";
+        const userId = ctx.session!.user!.id;
+        // const userId = "davirolim";
         const image = await ctx.prisma.image.create({
           data: { userId: userId },
         });
@@ -53,13 +69,11 @@ export const storageRouter = router({
         const signedUrl = await getSignedUrl(ctx.s3Client, command, {
           expiresIn: 3600,
         });
-        
+
         return signedUrl;
-
-
       } catch (error) {
         console.log(error);
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR"});
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
     }),
 });

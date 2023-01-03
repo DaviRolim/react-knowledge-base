@@ -6,12 +6,12 @@ import { trpc } from "../utils/trpc";
 
 const Images: NextPage = () => {
   const bucket = "react-knowledge-base";
-  const key = "images/daviprofile.png";
-  const params = {
-    Bucket: bucket,
-    Key: key,
-  };
-  const imageSrc = trpc.storage.getSignedUrlFromS3.useQuery(params);
+  const utils = trpc.useContext();
+  // Using the same time as the expires time in the backend - on the backend the expires is in seconds and here it is in milliseconds
+  // stale time set to 10 hours
+  const imagesFromLoggedUser = trpc.storage.getAllImages.useQuery(undefined, {
+    staleTime: 1000 * 60 * 60 * 10,
+  });
 
   const [file, setFile] = useState<File | undefined>(undefined);
   const { mutateAsync } = trpc.storage.createPutPresignedUrl.useMutation();
@@ -33,6 +33,8 @@ const Images: NextPage = () => {
       body: file,
       headers: new Headers({ ContentType: file.type }),
     });
+
+    utils.storage.getAllImages.invalidate();
   };
 
   return (
@@ -41,8 +43,10 @@ const Images: NextPage = () => {
         Upload Image
         <input type="file" onChange={onFileChange} />
         <button type="submit">Upload</button>
-        <img src={imageSrc.data} alt="My Image" />
       </form>
+      {imagesFromLoggedUser.data?.map((image) => (
+        <img src={image} alt="My Image" />
+      ))}
     </>
   );
 };
