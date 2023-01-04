@@ -47,8 +47,7 @@ const Images: NextPage = () => {
   const [files, setFiles] = useState<File[]>([]);
   const { mutateAsync } = trpc.storage.createPutPresignedUrl.useMutation();
 
-  const uploadImage = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const uploadImage = async () => {
     if (!files || files.length === 0) return;
 
     const signedUrls = await Promise.all(
@@ -70,7 +69,7 @@ const Images: NextPage = () => {
         });
       })
     );
-
+    onModalClose();
     utils.storage.getAllImages.invalidate();
   };
 
@@ -117,8 +116,7 @@ const Images: NextPage = () => {
               Close
             </Button>
             <Button
-              type="submit"
-              onClick={() => uploadImage}
+              onClick={() => uploadImage()}
               colorScheme="blue"
             >
               Save
@@ -128,7 +126,7 @@ const Images: NextPage = () => {
       </Modal>
       <div className="grid grid-cols-4 gap-4 m-2">
         {imagesFromLoggedUser.data?.map((image) => (
-          <img src={image} alt="My Image" />
+          <img src={image} alt="My Image" className="max-h-32" />
         ))}
       </div>
 
