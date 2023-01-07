@@ -6,17 +6,20 @@ import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
 import { ChakraProvider } from "@chakra-ui/react";
+import { ContextProvider } from "../context/SocketContext";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session}>
-      <ChakraProvider>
-        <Component {...pageProps} />
-      </ChakraProvider>
-    </SessionProvider>
+    <ContextProvider>
+      <SessionProvider session={session}>
+        <ChakraProvider>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </SessionProvider>
+    </ContextProvider>
   );
 };
 
