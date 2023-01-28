@@ -1,28 +1,16 @@
-# Create T3 App
+# Motivation for building this
+It's hard to find my projects because they're scattered, some are on github, others only on some computer.  
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
-## What's next? How do I make an app with this?
+With this project I aim to solve this by bringing together all personal side projects that I build using typescript on the same place, so I don't lose track of the projects and maybe I have some fun mixing some of the functionalities I'm learning about.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+# Pages & Functionalities
+`/` Signin -> Social Login with Discord
+`/images`  -> Upload and Download Images from S3
+`/chatroom`-> Real time video chat using WebRTC (needs a [webRTC server](https://github.com/DaviRolim/simpleWebRTC-server) in order to connect the peers)
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
-
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+# Getting started running this app
+- export AWS_REGION=us-east-1 && export AWS_ACCESS_KEY_ID=<AWSKEY> && export AWS_SECRET_ACCESS_KEY=<AWSSECRET>
+- To enable social login set the DISCORD keys on .env (check .env.example) for more information, check [this doc](https://create.t3.gg/en/usage/next-auth#setting-up-the-default-discordprovider).
+- Finally run `npm run dev`
