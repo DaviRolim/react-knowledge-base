@@ -5,9 +5,9 @@ It's hard to find my projects because they're scattered, some are on github, oth
 With this project I aim to solve this by bringing together all personal side projects that I build using typescript on the same place, so I don't lose track of the projects and maybe I have some fun mixing some of the functionalities I'm learning about.
 
 # Pages & Functionalities
-`/` Signin -> Social Login with Discord
-`/images`  -> Upload and Download Images from S3
-`/chatroom`-> Real time video chat using WebRTC (needs a [webRTC server](https://github.com/DaviRolim/simpleWebRTC-server) in order to connect the peers)
+- `/` Signin -> Social Login with Discord
+- `/images`  -> Upload and Download Images from S3
+- `/chatroom`-> Real time video chat using WebRTC (needs a [webRTC server](https://github.com/DaviRolim/simpleWebRTC-server) in order to connect the peers)
 
 
 # Getting started running this app
